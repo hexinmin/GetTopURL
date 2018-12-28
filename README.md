@@ -15,15 +15,15 @@ Getting top 100 URL from a log file
 3，输出：
    程序将输出如下结果：
    
-   ranking 1 count:10000 usrl:https://github.com/hexinmin
+   ranking 1 count:10000 url:https://github.com/hexinmin
    
-   ranking 2 count:10000 usrl:https://github.com/hexinmin1
+   ranking 2 count:10000 url:https://github.com/hexinmin1
    
-   ranking 2 count:10000 usrl:https://github.com/hexinmin1
+   ranking 2 count:10000 url:https://github.com/hexinmin1
    
-   ranking 3 count:10000 usrl:https://github.com/hexinmin3
+   ranking 3 count:10000 url:https://github.com/hexinmin3
    
-   ranking 4 count:10000 usrl:https://github.com/hexinmin4
+   ranking 4 count:10000 url:https://github.com/hexinmin4
    
    ......
    排名如何有并列的情况，则将出现过的url都输出
