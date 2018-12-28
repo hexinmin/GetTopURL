@@ -6,9 +6,10 @@
 #include <fstream>
 #include <string>
 #include <unordered_map>
+
+#define MAX_BUFFER_LEN 8192
+
 using namespace std;
-
-
 unsigned int BKDRHash(char * str)
 {
     unsigned int seed = 131;
@@ -49,6 +50,7 @@ public:
         m_current_bucket = 0;
         m_top_n = N;
         m_heap_sort_array = new HeapItem[m_top_n];
+        m_all_count_number.insert(std::pair<unsigned long long, unsigned int>(0L, 0));
     }
 
     ~GetTopN()
@@ -97,12 +99,17 @@ public:
  
     void DumpHeap()
     {
+        int ranking = 0;
         for(unsigned int i = 0; i < m_top_n; i ++)
         {
             for(std::list<std::string>::iterator it = m_heap_sort_array[i].items.begin(); it != 
                    m_heap_sort_array[i].items.end(); it++)
             {
-                printf("%llu %s\n", m_heap_sort_array[i].count, it->c_str());
+                if(it == m_heap_sort_array[i].items.begin())
+                {
+                    ranking ++;
+                } 
+                printf("ranking %d count: %llu url:%s\n",ranking, m_heap_sort_array[i].count, it->c_str());
             }
         }
     }
@@ -124,22 +131,28 @@ public:
 
     bool update_heap_top(std::string& s, unsigned long long c)
     {
+        unordered_map<unsigned long long, unsigned int>::iterator it;
         struct HeapItem & top = m_heap_sort_array[0];
         if(top.count > c)
         {
+            return false; // no need to adjust heap
+        } 
+        else if( (it=m_all_count_number.find(c)) != m_all_count_number.end())
+        {
+            // merge
+            struct HeapItem & merge = m_heap_sort_array[it->second];
+            merge.items.push_back(s);
             return false;
         } 
-        else if(top.count < c)
+        else
         {
+            // replace the top element of the heap
+            m_all_count_number.erase(m_all_count_number.find(top.count));
+            m_all_count_number.insert(std::pair<unsigned long long, unsigned int>(c,0));
             top.items.clear();
             top.count = c;
             top.items.push_back(s);
-            return true; 
-        }
-        else
-        { 
-            top.items.push_back(s);
-            return false;
+            return true; // top of heap have been changed, must adjust heap
         }
     }
 
@@ -155,6 +168,8 @@ public:
 
             if(m_heap_sort_array[i].count > m_heap_sort_array[k].count)
             {
+                m_all_count_number[m_heap_sort_array[i].count] = k;
+                m_all_count_number[m_heap_sort_array[k].count] = i;
                 m_heap_sort_array[i].swap(m_heap_sort_array + k);
                 i = k;
             }
@@ -180,16 +195,19 @@ public:
     unsigned int m_current_bucket;
     unsigned int m_top_n;
     unordered_map<std::string, unsigned long long> m_all_items;
+    unordered_map<unsigned long long, unsigned int> m_all_count_number;
     struct HeapItem * m_heap_sort_array;
 };
 
 int main(int argc, char** argv)
 {
-    GetTopN gtn(128,100);    
+    int bucket_count = atoi(argv[2]); // the bucket count
+    int top_count = atoi(argv[3]); // get 'top N'
+    GetTopN gtn(bucket_count,top_count);    
     while(true)
     {
         std::ifstream fin(argv[1], std::ios::in);
-        char line[8192];
+        char line[MAX_BUFFER_LEN];
         while(fin.getline(line,sizeof(line)))
         {
             gtn.Input(line);
@@ -202,11 +220,11 @@ int main(int argc, char** argv)
        
         gtn.update_heap();
     } 
-    gtn.DumpHeap();
-    printf("-------------------------\n");
+    //gtn.DumpHeap();
+    //printf("-------------------------\n");
     gtn.heap_sort();
     gtn.DumpHeap();
     
-    
     return 0;
 }
+
