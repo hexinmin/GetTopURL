@@ -5,12 +5,12 @@ Getting top 100 URL from a log file
    g++ -std=c++11 -O 2 -o get_topn get_topN.cpp
 
 2, 用法
-   ./get_topn <file_name> <bucket_count> <top number>
+   ./get_topn <file_name> <bucket_count>  <top number>
    
    ./get_topn ./urls 128 100
    1) urls: 第一个参数为记录url的文件名称
    2) 128: hash桶个数。如果内存不够，则使用更多的hash桶。例如，100G url文件，内存1G，则桶设为128则可满足最坏的情况
-   3）100：求出排名前100的url，可以设定前多少个
+   3) 100：求出排名前100的url，可以设定前多少个
    
 3，输出：
    程序将输出如下结果：
