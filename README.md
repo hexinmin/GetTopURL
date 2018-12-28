@@ -26,4 +26,4 @@ Getting top 100 URL from a log file
    ranking 4 count:10000 url:https://github.com/hexinmin4
    
    ......
-   排名如何有并列的情况，则将出现过的url都输出
+   排名如有并列的情况，则将出现过的url都输出
