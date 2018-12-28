@@ -5,7 +5,7 @@ Getting top 100 URL from a log file
    g++ -std=c++11 -O 2 -o get_topn get_topN.cpp
 
 2, 用法
-   ./get_topn <file_name> <bucket_count>  <top number>
+./get_topn <file_name> <bucket_count> <top count>
    
    ./get_topn ./urls 128 100
    1) urls: 第一个参数为记录url的文件名称
