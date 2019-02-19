@@ -7,7 +7,7 @@
 #include <string>
 #include <unordered_map>
 
-#define MAX_BUFFER_LEN 8192
+#define MAX_BUFFER_LEN 4096
 
 using namespace std;
 unsigned int BKDRHash(char * str)
