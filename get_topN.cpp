@@ -10,6 +10,7 @@
 #define MAX_BUFFER_LEN 4096
 
 using namespace std;
+// cal hash
 unsigned int BKDRHash(char * str)
 {
     unsigned int seed = 131;
